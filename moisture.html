@@ -3,65 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <title>Soil Moisture Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-           font-family:'Arial', sans-serif; 
-           background-color:#f4f4f4; 
-           color:#333; 
-           padding-top :20px; 
-           text-align:center; 
-       }
-       canvas { 
-           max-width :100%; 
-           height:auto !important; 
-       }
-       .back-link { 
-           display:block; 
-           margin-top :20px; 
-           color:#3498db; 
-           text-decoration:none; 
-       }
-   </style>
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 20px;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .sensor-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        footer {
+            padding: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
 </head>
 <body>
 
-<h1>Soil Moisture Data</h1>
+<header>
+    <h1>Soil Moisture Monitoring</h1>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="temperature.html">Temperature</a>
+        <a href="humidity.html">Humidity</a>
+        <a href="health.html">Plant Health Index</a>
+    </nav>
+</header>
 
-<canvas id="moistureChart"></canvas>
-<p id="moistureStatus">Current Moisture Level</p>
-
-<a href="index.html" class="back-link">Back to Main Dashboard</a>
+<div class="sensor-card">
+    <canvas id="moistureChart"></canvas>
+    <p id="moistureStatus">Current Moisture Level</p>
+</div>
 
 <script>
-// Create moisture chart
-const ctx = document.getElementById('moistureChart').getContext('2d');
-const moistureChart = new Chart(ctx, {
-    type:'line',
-    data:{
-       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
-       datasets:[{
-          label:'Soil Moisture',
-          data:Array(30).fill(Math.floor(Math.random() * (80 -30 +1)) +30), // Sample data
-          borderColor:'blue',
-          tension:.4,
-          fill:true,
-          backgroundColor:'rgba(52,152,219,.3)'
-       }]
-   },
-   options:{
-      responsive:true,
-      scales:{
-         y:{
-             beginAtZero:true
-         }
-      },
-      plugins:{
-         legend:{display:false}
-      }
-   }
-});
+    class MoistureMonitorSystem {
+        constructor() {
+            this.moistureData = this.generateRealisticValue(30, 80);
+            this.historicalData = [];
+            this.updateHistoricalData();
+            setInterval(() => this.updateHistoricalData(), 1000);
+            this.createChart();
+        }
+
+        generateRealisticValue(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        updateHistoricalData() {
+            this.moistureData = this.generateRealisticValue(30, 80);
+            this.historicalData.push(this.moistureData);
+            if (this.historicalData.length > 30) {
+                this.historicalData.shift();
+            }
+            document.getElementById('moistureStatus').textContent = `Current Moisture Level: ${this.moistureData}%`;
+        }
+
+        createChart() {
+            const ctx = document.getElementById('moistureChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 30}, (_, i) => `-${30 - i}m`),
+                    datasets: [{
+                        label: 'Soil Moisture',
+                        data: this.historicalData,
+                        borderColor: 'blue',
+                        tension: 0.4,
+                        fill:true,
+                        backgroundColor:'rgba(52,152,219,.3)'
+                    }]
+                },
+                options:{
+                    responsive:true,
+                    scales:{
+                        y:{
+                            beginAtZero:true
+                        }
+                    },
+                    plugins:{
+                        legend:{display:false}
+                    }
+                }
+            });
+        }
+    }
+
+    const moistureSystem = new MoistureMonitorSystem();
 </script>
+
+<footer>
+    © 2024 Smart Plant Monitoring | Developed by Anmol
+</footer>
 
 </body>
 </html>
