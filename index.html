@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advanced Plant Monitoring Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --alert-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #3498db, #2ecc71, #9b59b6, #e74c3c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sensor-card {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .sensor-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; padding: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        🌱 Intelligent Plant Monitoring System
+    </h1>
+
+    <div class="dashboard">
+        <div class="sensor-card" onclick="window.location.href='moisture.html'">
+            <h2>Soil Moisture</h2>
+            <canvas id="moistureChart"></canvas>
+            <p id="moistureStatus">Current: 0%</p>
+        </div>
+
+        <div class="sensor-card" onclick="window.location.href='temperature.html'">
+            <h2>Temperature</h2>
+            <canvas id="temperatureChart"></canvas>
+            <p id="temperatureStatus">Current: 0°C</p>
+        </div>
+
+        <div class="sensor-card" onclick="window.location.href='humidity.html'">
+            <h2>Humidity</h2>
+            <canvas id="humidityChart"></canvas>
+            <p id="humidityStatus">Current: 0%</p>
+        </div>
+
+        <div class="sensor-card" onclick="window.location.href='health.html'">
+            <h2>Plant Health Index</h2>
+            <canvas id="healthChart"></canvas>
+            <p id="healthStatus">Overall Health: Excellent</p>
+        </div>
+    </div>
+
+    <script>
+        class PlantMonitorSystem {
+            constructor() {
+                this.sensorData = {
+                    moisture: this.generateRealisticValue(30, 80),
+                    temperature: this.generateRealisticValue(18, 35),
+                    humidity: this.generateRealisticValue(40, 90),
+                    healthIndex: this.calculateHealthIndex()
+                };
+                this.historicalData = {
+                    moisture: [],
+                    temperature: [],
+                    humidity: [],
+                    healthIndex: []
+                };
+                this.updateHistoricalData();
+                setInterval(() => this.updateHistoricalData(), 1000);
+                this.updateCharts();
+                setInterval(() => this.updateCharts(), 1000);
+            }
+
+            generateRealisticValue(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            calculateHealthIndex() {
+                const { moisture, temperature, humidity } = this.sensorData;
+                const healthFactors = [
+                    moisture > 50 && moisture < 70 ? 25 : 0,
+                    temperature > 20 && temperature < 30 ? 25 : 0,
+                    humidity > 50 && humidity < 80 ? 25 : 0
+                ];
+                return healthFactors.reduce((a, b) => a + b, 0);
+            }
+
+            updateHistoricalData() {
+                Object.keys(this.sensorData).forEach(key => {
+                    this.historicalData[key].push(this.sensorData[key]);
+                    if (this.historicalData[key].length > 30) {
+                        this.historicalData[key].shift();
+                    }
+                });
+                // Update current status display
+                document.getElementById('moistureStatus').textContent = `Current Moisture: ${this.sensorData.moisture}%`;
+                document.getElementById('temperatureStatus').textContent = `Current Temperature: ${this.sensorData.temperature}°C`;
+                document.getElementById('humidityStatus').textContent = `Current Humidity: ${this.sensorData.humidity}%`;
+                document.getElementById('healthStatus').textContent = `Overall Health Index: ${this.sensorData.healthIndex}`;
+            }
+
+            updateCharts() {
+                charts.moisture.data.datasets[0].data = this.historicalData.moisture;
+                charts.temperature.data.datasets[0].data = this.historicalData.temperature;
+                charts.humidity.data.datasets[0].data = this.historicalData.humidity;
+                charts.health.data.datasets[0].data = this.historicalData.healthIndex;
+
+                Object.values(charts).forEach(chart => chart.update());
+            }
+        }
+
+        function createChart(canvasId, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 30}, (_, i) => `-${30 - i}m`),
+                    datasets: [{
+                        label,
+                        data: Array(30).fill(0),
+                        borderColor: 'blue',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(52,152,219,0.3)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { 
+                        yAxes:[{
+                            ticks:{
+                                beginAtZero:true
+                            }
+                        }]
+                    },
+                    plugins:{
+                        legend:{display:false}
+                    }
+                }
+            });
+        }
+
+        const sensorSystem = new PlantMonitorSystem();
+        const charts = {
+            moisture : createChart('moistureChart', 'Soil Moisture'),
+            temperature : createChart('temperatureChart', 'Temperature'),
+            humidity : createChart('humidityChart', 'Humidity'),
+             health : createChart('healthChart', 'Health Index')
+         };
+    </script>
+</body>
+</html>
