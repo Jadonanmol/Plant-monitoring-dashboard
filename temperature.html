@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Temperature Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+       body { font-family:'Arial', sans-serif; background-color:#f4f4f4; color:#333; padding-top :20px; text-align:center; }
+       canvas { max-width :100%; height:auto !important; }
+       .back-link { display:block; margin-top :20px; color:#3498db; text-decoration:none; }
+   </style>
+</head>
+<body>
+
+<h1>Temperature Data</h1>
+
+<canvas id="temperatureChart"></canvas>
+<p id="temperatureStatus">Current Temperature Level</p>
+
+<a href="index.html" class="back-link">Back to Main Dashboard</a>
+
+<script>
+// Create temperature chart
+const ctxTemp = document.getElementById('temperatureChart').getContext('2d');
+const temperatureChart = new Chart(ctxTemp, {
+    type:'line',
+    data:{
+       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
+       datasets:[{
+          label:'Temperature',
+          data:Array(30).fill(Math.floor(Math.random() * (35 -18 +1)) +18), // Sample data
+          borderColor:'red',
+          tension:.4,
+          fill:true,
+          backgroundColor:'rgba(231,76,60,.3)'
+       }]
+   },
+   options:{
+      responsive:true,
+      scales:{
+         y:{
+             beginAtZero:true
+         }
+      },
+      plugins:{
+         legend:{display:false}
+      }
+   }
+});
+</script>
+
+</body>
+</html>
