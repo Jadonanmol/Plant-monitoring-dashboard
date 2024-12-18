@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plant Health Index Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+       body { font-family:'Arial', sans-serif; background-color:#f4f4f4; color:#333; padding-top :20px; text-align:center; }
+       canvas { max-width :100%; height:auto !important; }
+       .back-link { display:block; margin-top :20px; color:#3498db; text-decoration:none; }
+   </style>
+</head>
+<body>
+
+<h1>Plant Health Index Data</h1>
+
+<canvas id="healthChart"></canvas>
+<p id="healthStatus">Current Health Index Level</p>
+
+<a href="index.html" class="back-link">Back to Main Dashboard</a>
+
+<script>
+// Create health index chart
+const ctxHealth = document.getElementById('healthChart').getContext('2d');
+const healthChart = new Chart(ctxHealth, {
+    type:'line',
+    data:{
+       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
+       datasets:[{
+          label:'Health Index',
+          data:Array(30).fill(Math.floor(Math.random() * (100 -50 +1)) +50), // Sample data
+          borderColor:'purple',
+          tension:.4,
+          fill:true,
+          backgroundColor:'rgba(155,89,182,.3)'
+       }]
+   },
+   options:{
+      responsive:true,
+      scales:{
+         y:{
+             beginAtZero:true
+         }
+      },
+      plugins:{
+         legend:{display:false}
+      }
+   }
+});
+</script>
+
+</body>
+</html>
