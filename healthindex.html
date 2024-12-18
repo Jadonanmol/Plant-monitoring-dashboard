@@ -1,53 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Plant Health Index Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-       body { font-family:'Arial', sans-serif; background-color:#f4f4f4; color:#333; padding-top :20px; text-align:center; }
-       canvas { max-width :100%; height:auto !important; }
-       .back-link { display:block; margin-top :20px; color:#3498db; text-decoration:none; }
-   </style>
-</head>
+   <meta charset="UTF-8">
+   <title>Plant Health Index Dashboard</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <style>body{font-family:'Arial',sans-serif;background-color:#f39c12;color:white;text-align:center;margin-0;padding-0;}header{padding-20px;}nav a{color:white;margin-0-15px;text-decoration:none;} .sensor-card{background-color :rgba(255 ,255 ,255 , .2);border-radius :10 px;padding :20 px;margin :20 px auto;max-width :600 px ;box-shadow :0 px -4 px -10 px rgba (0 ,0 ,0 , .3 );}canvas{max-width :100 % ;height:auto!important;}footer{padding :20 px;color :rgba (255 ,255 ,255 , .7 );}</style></head>
+
 <body>
 
-<h1>Plant Health Index Data</h1>
+<header><h1>Plant Health Index Monitoring </h1><nav><a href=index.html>Dashboard </ a >< a href=moisture.html >Soil Moisture </ a >< a href=temperature.html >Temperature </ a >< a href=humidity.html >Humidity </ a ></nav></header >
 
-<canvas id="healthChart"></canvas>
-<p id="healthStatus">Current Health Index Level</p>
+<div class=sensor-card><canvas id=healthChart ></canvas ><p id=healthStatus >Current Health Index Level </ p ></div >
 
-<a href="index.html" class="back-link">Back to Main Dashboard</a>
+<script >
+class HealthMonitorSystem {constructor () {this.healthIndex=this.calculateHealthIndex();this.historicalHealth=[];this.updateHealthIndex();setInterval (()=>this.updateHealthIndex(),10000);this.createChart ();}
 
-<script>
-// Create health index chart
-const ctxHealth = document.getElementById('healthChart').getContext('2d');
-const healthChart = new Chart(ctxHealth, {
-    type:'line',
-    data:{
-       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
-       datasets:[{
-          label:'Health Index',
-          data:Array(30).fill(Math.floor(Math.random() * (100 -50 +1)) +50), // Sample data
-          borderColor:'purple',
-          tension:.4,
-          fill:true,
-          backgroundColor:'rgba(155,89,182,.3)'
-       }]
-   },
-   options:{
-      responsive:true,
-      scales:{
-         y:{
-             beginAtZero:true
-         }
-      },
-      plugins:{
-         legend:{display:false}
-      }
-   }
-});
-</script>
+calculateHealthIndex () {return Math.floor(Math.random()*100);}
 
-</body>
-</html>
+updateHealthIndex () {this.healthIndex=this.calculateHealthIndex();this.historicalHealth.push(this.healthIndex);if(this.historicalHealth.length>30){this.historicalHealth.shift();}document.getElementById('healthStatus').textContent=`Current Health Index Level:${this.healthIndex}`;}
+
+createChart () {const ctx=document.getElementById('healthChart').getContext('2d');new Chart(ctx,{type:'line',data:{labels:Array.from({length :30},(_,i)=>`-${30-i}m`),datasets:[{label:'Health Index',data:this.historicalHealth,borderColor:'purple',tension:.4 ,fill:true ,backgroundColor:'rgba(155 ,89 ,182 ,.3)'}]},options:{responsive:true ,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}});}}}
+
+const healthSystem=new HealthMonitorSystem(); </script >
+
+<footer >©2024 Smart Plant Monitoring | Developed by Anmol </footer >
+
+</body >
+</html >
