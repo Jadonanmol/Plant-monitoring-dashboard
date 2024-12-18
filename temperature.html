@@ -3,51 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <title>Temperature Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-       body { font-family:'Arial', sans-serif; background-color:#f4f4f4; color:#333; padding-top :20px; text-align:center; }
-       canvas { max-width :100%; height:auto !important; }
-       .back-link { display:block; margin-top :20px; color:#3498db; text-decoration:none; }
-   </style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 20px;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .sensor-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        footer {
+            padding: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
 </head>
 <body>
 
-<h1>Temperature Data</h1>
+<header>
+    <h1>Temperature Monitoring</h1>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="moisture.html">Soil Moisture</a>
+        <a href="humidity.html">Humidity</a>
+        <a href="health.html">Plant Health Index</a>
+    </nav>
+</header>
 
-<canvas id="temperatureChart"></canvas>
-<p id="temperatureStatus">Current Temperature Level</p>
-
-<a href="index.html" class="back-link">Back to Main Dashboard</a>
+<div class="sensor-card">
+    <canvas id="temperatureChart"></canvas>
+    <p id="temperatureStatus">Current Temperature Level</p>
+</div>
 
 <script>
-// Create temperature chart
-const ctxTemp = document.getElementById('temperatureChart').getContext('2d');
-const temperatureChart = new Chart(ctxTemp, {
-    type:'line',
-    data:{
-       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
-       datasets:[{
-          label:'Temperature',
-          data:Array(30).fill(Math.floor(Math.random() * (35 -18 +1)) +18), // Sample data
-          borderColor:'red',
-          tension:.4,
-          fill:true,
-          backgroundColor:'rgba(231,76,60,.3)'
-       }]
-   },
-   options:{
-      responsive:true,
-      scales:{
-         y:{
-             beginAtZero:true
-         }
-      },
-      plugins:{
-         legend:{display:false}
+    class TemperatureMonitorSystem {
+        constructor() {
+            this.temperatureData = this.generateRealisticValue(18, 35);
+            this.historicalData = [];
+            this.updateHistoricalData();
+            setInterval(() => this.updateHistoricalData(), 1000);
+            this.createChart();
+        }
+
+        generateRealisticValue(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
       }
-   }
-});
+
+      updateHistoricalData() {
+          this.temperatureData = this.generateRealisticValue(18, 35);
+          this.historicalData.push(this.temperatureData);
+          if (this.historicalData.length > 30) {
+              this.historicalData.shift();
+          }
+          document.getElementById('temperatureStatus').textContent = `Current Temperature Level: ${this.temperatureData}°C`;
+      }
+
+      createChart() {
+          const ctx = document.getElementById('temperatureChart').getContext('2d');
+          new Chart(ctx, {
+              type:'line',
+              data:{
+                  labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
+                  datasets:[{
+                      label:'Temperature',
+                      data:this.historicalData,
+                      borderColor:'red',
+                      tension:.4,
+                      fill:true,
+                      backgroundColor:'rgba(231,76,60,.3)'
+                  }]
+              },
+              options:{
+                  responsive:true,
+                  scales:{
+                      y:{
+                          beginAtZero:true
+                      }
+                  },
+                  plugins:{
+                      legend:{display:false}
+                  }
+              }
+          });
+      }
+    }
+
+    const temperatureSystem = new TemperatureMonitorSystem();
 </script>
+
+<footer>
+    © 2024 Smart Plant Monitoring | Developed by Anmol
+</footer>
 
 </body>
 </html>
