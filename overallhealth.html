@@ -88,12 +88,27 @@
             if (this.healthIndex < 40) {
                 alertDiv.textContent = "Alert! Critical health status.";
                 alertDiv.style.color = "red";
+                alertDiv.style.fontWeight = "bold";
+                alertDiv.style.fontSize = "1.2em";
+                alertDiv.style.backgroundColor = "rgba(255,0,0,0.2)";
+                alertDiv.style.padding = "10px";
+                alertDiv.style.borderRadius = "5px";
             } else if (this.healthIndex < 70) {
                 alertDiv.textContent = "Warning! Moderate health stress.";
                 alertDiv.style.color = "orange";
+                alertDiv.style.fontWeight = "bold";
+                alertDiv.style.fontSize = "1.2em";
+                alertDiv.style.backgroundColor = "rgba(255,165,0,0.2)";
+                alertDiv.style.padding = "10px";
+                alertDiv.style.borderRadius = "5px";
             } else {
                 alertDiv.textContent = "Healthy plant conditions.";
                 alertDiv.style.color = "green";
+                alertDiv.style.fontWeight = "bold";
+                alertDiv.style.fontSize = "1.2em";
+                alertDiv.style.backgroundColor = "rgba(0,128,0,0.2)";
+                alertDiv.style.padding = "10px";
+                alertDiv.style.borderRadius = "5px";
             }
         }
 
