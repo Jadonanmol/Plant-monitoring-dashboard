@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Soil Moisture Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+           font-family:'Arial', sans-serif; 
+           background-color:#f4f4f4; 
+           color:#333; 
+           padding-top :20px; 
+           text-align:center; 
+       }
+       canvas { 
+           max-width :100%; 
+           height:auto !important; 
+       }
+       .back-link { 
+           display:block; 
+           margin-top :20px; 
+           color:#3498db; 
+           text-decoration:none; 
+       }
+   </style>
+</head>
+<body>
+
+<h1>Soil Moisture Data</h1>
+
+<canvas id="moistureChart"></canvas>
+<p id="moistureStatus">Current Moisture Level</p>
+
+<a href="index.html" class="back-link">Back to Main Dashboard</a>
+
+<script>
+// Create moisture chart
+const ctx = document.getElementById('moistureChart').getContext('2d');
+const moistureChart = new Chart(ctx, {
+    type:'line',
+    data:{
+       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
+       datasets:[{
+          label:'Soil Moisture',
+          data:Array(30).fill(Math.floor(Math.random() * (80 -30 +1)) +30), // Sample data
+          borderColor:'blue',
+          tension:.4,
+          fill:true,
+          backgroundColor:'rgba(52,152,219,.3)'
+       }]
+   },
+   options:{
+      responsive:true,
+      scales:{
+         y:{
+             beginAtZero:true
+         }
+      },
+      plugins:{
+         legend:{display:false}
+      }
+   }
+});
+</script>
+
+</body>
+</html>
