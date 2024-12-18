@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Humidity Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+       body { font-family:'Arial', sans-serif; background-color:#f4f4f4; color:#333; padding-top :20px; text-align:center; }
+       canvas { max-width :100%; height:auto !important; }
+       .back-link { display:block; margin-top :20px; color:#3498db; text-decoration:none; }
+   </style>
+</head>
+<body>
+
+<h1>Humidity Data</h1>
+
+<canvas id="humidityChart"></canvas>
+<p id="humidityStatus">Current Humidity Level</p>
+
+<a href="index.html" class="back-link">Back to Main Dashboard</a>
+
+<script>
+// Create humidity chart
+const ctxHumid = document.getElementById('humidityChart').getContext('2d');
+const humidityChart = new Chart(ctxHumid, {
+    type:'line',
+    data:{
+       labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
+       datasets:[{
+          label:'Humidity',
+          data:Array(30).fill(Math.floor(Math.random() * (90 -40 +1)) +40), // Sample data
+          borderColor:'green',
+          tension:.4,
+          fill:true,
+          backgroundColor:'rgba(46,204,113,.3)'
+       }]
+   },
+   options:{
+      responsive:true,
+      scales:{
+         y:{
+             beginAtZero:true
+         }
+      },
+      plugins:{
+         legend:{display:false}
+      }
+   }
+});
+</script>
+
+</body>
+</html>
+
