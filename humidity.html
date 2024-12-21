@@ -6,48 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-       body { 
-           font-family: 'Arial', sans-serif; 
-           background-color: #9b59b6; 
-           color: white; 
-           text-align: center; 
-           margin: 0; 
-           padding: 0; 
-       }
-       header { 
-           padding: 20px; 
-       }
-       nav a { 
-           color: white; 
-           margin: 0 15px; 
-           text-decoration: none; 
-       }
-       .sensor-card { 
-           background: rgba(255, 255, 255, .2); 
-           border-radius: 10px; 
-           padding: 20px; 
-           margin: 20px auto; 
-           max-width: 600px; 
-           box-shadow: 0 4px 10px rgba(0, 0, 0, .3); 
-       }
-       canvas { 
-           max-width: 100%; 
-           height: auto!important; 
-       }
-       footer { 
-           padding: 20px; 
-           color: rgba(255, 255, 255, .7); 
-       }
-   </style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 20px;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .sensor-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        footer {
+            padding: 20px;
+            color: rgba(255,255,255,0.7);
+        }
+    </style>
 </head>
-
 <body>
 
 <header>
     <h1>Humidity Monitoring</h1>
     <nav>
         <a href="index.html">Dashboard</a>
-        <a href="moisture.html">Soil Moisture</a>
+        <a href="moisture.html">Moisture</a>
         <a href="temperature.html">Temperature</a>
         <a href="health.html">Plant Health Index</a>
     </nav>
@@ -83,17 +82,17 @@
 
         createChart() {
             const ctx = document.getElementById('humidityChart').getContext('2d');
-            new Chart(ctx, {
+            window.humidityChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({ length: 30 }, (_, i) => `-${30 - i}m`),
+                    labels: Array.from({length: 30}, (_, i) => `-${30 - i}m`),
                     datasets: [{
                         label: 'Humidity',
                         data: this.historicalData,
                         borderColor: 'green',
-                        tension: .4,
+                        tension: 0.4,
                         fill: true,
-                        backgroundColor: 'rgba(46, 204, 113, .3)'
+                        backgroundColor: 'rgba(46, 204, 113, 0.3)'
                     }]
                 },
                 options: {
@@ -104,9 +103,7 @@
                         }
                     },
                     plugins: {
-                        legend: {
-                            display: false
-                        }
+                        legend: { display: false }
                     }
                 }
             });
@@ -116,7 +113,9 @@
     const humiditySystem = new HumidityMonitorSystem();
 </script>
 
-<footer>©2024 Smart Plant Monitoring | Developed by Anmol</footer>
+<footer>
+    © 2024 Smart Plant Monitoring | Developed by Anmol
+</footer>
 
 </body>
 </html>
