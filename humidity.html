@@ -7,49 +7,116 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
        body { 
-           font-family:'Arial', sans-serif; 
-           background-color:#9b59b6; 
-           color:white; 
-           text-align:center; 
-           margin:0; 
-           padding=0; 
+           font-family: 'Arial', sans-serif; 
+           background-color: #9b59b6; 
+           color: white; 
+           text-align: center; 
+           margin: 0; 
+           padding: 0; 
        }
        header { 
-           padding=20px; 
+           padding: 20px; 
        }
        nav a { 
-           color:white; 
-           margin=0=15px; 
-           text-decoration:none; 
+           color: white; 
+           margin: 0 15px; 
+           text-decoration: none; 
        }
        .sensor-card { 
-           background=rgba(255,255,255,.2); 
-           border-radius=10px; 
-           padding=20px; 
-           margin=20px auto; 
-           max-width=600px; 
-           box-shadow=0=4px=10px rgba(0,0,0,.3); 
+           background: rgba(255, 255, 255, .2); 
+           border-radius: 10px; 
+           padding: 20px; 
+           margin: 20px auto; 
+           max-width: 600px; 
+           box-shadow: 0 4px 10px rgba(0, 0, 0, .3); 
        }
        canvas { 
-           max-width=100%; 
-           height:auto!important; 
+           max-width: 100%; 
+           height: auto!important; 
        }
        footer { 
-           padding=20px; 
-           color=rgba(255,255,.7); 
+           padding: 20px; 
+           color: rgba(255, 255, 255, .7); 
        }
    </style>
 </head>
 
 <body>
 
-<header><h1>Humidity Monitoring</h1><nav><a href=index.html>Dashboard</a><a href=moisture.html>Soil Moisture</a><a href=temperature.html>Temperature</a><a href=health.html>Plant Health Index</a></nav></header>
+<header>
+    <h1>Humidity Monitoring</h1>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="moisture.html">Soil Moisture</a>
+        <a href="temperature.html">Temperature</a>
+        <a href="health.html">Plant Health Index</a>
+    </nav>
+</header>
 
-<div class=sensor-card><canvas id=humidityChart></canvas><p id=humidityStatus>Current Humidity Level</p></div>
+<div class="sensor-card">
+    <canvas id="humidityChart"></canvas>
+    <p id="humidityStatus">Current Humidity Level</p>
+</div>
 
-<script>class HumidityMonitorSystem {constructor() {this.humidityData=this.generateRealisticValue(40,90);this.historicalData=[];this.updateHistoricalData();setInterval(()=>this.updateHistoricalData(),1000);this.createChart();}generateRealisticValue(min,max) {return Math.floor(Math.random()*(max-min+1))+min;}updateHistoricalData() {this.humidityData=this.generateRealisticValue(40,90);this.historicalData.push(this.humidityData);if(this.historicalData.length>30){this.historicalData.shift();}document.getElementById('humidityStatus').textContent=`Current Humidity Level:${this.humidityData}%`; }createChart() {const ctx=document.getElementById('humidityChart').getContext('2d');new Chart(ctx,{type:'line',data:{labels:Array.from({length :30},(_,i)=>`-${30-i}m`),datasets:[{label:'Humidity',data:this.historicalData,borderColor:'green',tension:.4,fill:true,backgroundColor:'rgba(46,204,113,.3)'}]},options:{responsive:true,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}});}}}const humiditySystem=new HumidityMonitorSystem(); </script>
+<script>
+    class HumidityMonitorSystem {
+        constructor() {
+            this.humidityData = this.generateRealisticValue(40, 90);
+            this.historicalData = [];
+            this.updateHistoricalData();
+            setInterval(() => this.updateHistoricalData(), 1000);
+            this.createChart();
+        }
 
-<footer>©2024 Smart Plant Monitoring | Developed by Anmol </footer>
+        generateRealisticValue(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
-</body></html>
+        updateHistoricalData() {
+            this.humidityData = this.generateRealisticValue(40, 90);
+            this.historicalData.push(this.humidityData);
+            if (this.historicalData.length > 30) {
+                this.historicalData.shift();
+            }
+            document.getElementById('humidityStatus').textContent = `Current Humidity Level: ${this.humidityData}%`;
+        }
 
+        createChart() {
+            const ctx = document.getElementById('humidityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 30 }, (_, i) => `-${30 - i}m`),
+                    datasets: [{
+                        label: 'Humidity',
+                        data: this.historicalData,
+                        borderColor: 'green',
+                        tension: .4,
+                        fill: true,
+                        backgroundColor: 'rgba(46, 204, 113, .3)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    const humiditySystem = new HumidityMonitorSystem();
+</script>
+
+<footer>©2024 Smart Plant Monitoring | Developed by Anmol</footer>
+
+</body>
+</html>
