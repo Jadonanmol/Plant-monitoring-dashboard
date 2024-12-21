@@ -60,54 +60,59 @@
 <script>
     class TemperatureMonitorSystem {
         constructor() {
-            this.temperatureData = this.generateRealisticValue(18, 35);
+            this.temperatureData = [];
             this.historicalData = [];
-            this.updateHistoricalData();
-            setInterval(() => this.updateHistoricalData(), 1000);
             this.createChart();
+            setInterval(() => this.updateHistoricalData(), 1000);  // Updates every second
         }
 
         generateRealisticValue(min, max) {
-          return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
 
-      updateHistoricalData() {
-          this.temperatureData = this.generateRealisticValue(18, 35);
-          this.historicalData.push(this.temperatureData);
-          if (this.historicalData.length > 30) {
-              this.historicalData.shift();
-          }
-          document.getElementById('temperatureStatus').textContent = `Current Temperature Level: ${this.temperatureData}°C`;
-      }
+        updateHistoricalData() {
+            const newTemperature = this.generateRealisticValue(18, 35);
+            this.historicalData.push(newTemperature);
+            
+            if (this.historicalData.length > 30) {
+                this.historicalData.shift();  // Keep only the last 30 values
+            }
 
-      createChart() {
-          const ctx = document.getElementById('temperatureChart').getContext('2d');
-          new Chart(ctx, {
-              type:'line',
-              data:{
-                  labels:Array.from({length :30}, (_,i) => `-${30-i}m`),
-                  datasets:[{
-                      label:'Temperature',
-                      data:this.historicalData,
-                      borderColor:'red',
-                      tension:.4,
-                      fill:true,
-                      backgroundColor:'rgba(231,76,60,.3)'
-                  }]
-              },
-              options:{
-                  responsive:true,
-                  scales:{
-                      y:{
-                          beginAtZero:true
-                      }
-                  },
-                  plugins:{
-                      legend:{display:false}
-                  }
-              }
-          });
-      }
+            document.getElementById('temperatureStatus').textContent = `Current Temperature Level: ${newTemperature}°C`;
+
+            // Update the chart data
+            this.chart.data.datasets[0].data = this.historicalData;
+            this.chart.update();  // Re-render the chart with new data
+        }
+
+        createChart() {
+            const ctx = document.getElementById('temperatureChart').getContext('2d');
+            this.chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 30 }, (_, i) => `-${30 - i}m`),  // Display last 30 minutes
+                    datasets: [{
+                        label: 'Temperature',
+                        data: this.historicalData,
+                        borderColor: 'red',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(231,76,60,.3)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
     }
 
     const temperatureSystem = new TemperatureMonitorSystem();
