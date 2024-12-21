@@ -82,7 +82,7 @@
 
         createChart() {
             const ctx = document.getElementById('moistureChart').getContext('2d');
-            new Chart(ctx, {
+            window.moistureChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: Array.from({length: 30}, (_, i) => `-${30 - i}m`),
